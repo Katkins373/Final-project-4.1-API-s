@@ -1,45 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Find Your Movie</title>
-  <link rel="stylesheet" href="./styles.css" />
-  <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
-</head>
-<body>
-
-    <div class="overlay-container">
-      <div class="red-overlay"></div>
-  <header class="navbar">
-    <div class="nav content-wrapper justify-between align center">
-      <div class="logo">
-        <img src="./assets/HomeCinema.jpg" alt="logo" class="logo" />
-      </div>
-      <div class="links align-center justify-between">
-        <a href="index.html" class="link">Home</a>
-        <a href="index2.html" class="link">Find your movie</a>
-        <a href="#" class="link-primary">Create Account</a>
-      </div>
-    </div>
-  </header>
-
-  <h1 class="header-second">Browse our movies</h1>
-
-
-    <div class="search-wrapper">
-      <div class="search-bar">
-        <div class="input-wrapper">
-          <input type="text" placeholder="Search by Title, Genre, Actor" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Your Movie</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="app.js" defer></script>
+    <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav content-wrapper justify-between align-center">
+        <div class="logo">
+          <img src="./assets/HomeCinema.jpg" alt="logo" class="logo" />
+        </div>
+        <div class="links align-center justify-between">
+          <a href="index.html" class="link">Home</a>
+          <a href="index2.html" class="link">Find your movie</a>
+          <a href="#" class="link-primary">Create Account</a>
         </div>
       </div>
-      <button class="not-loading">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
-  </div>
+    </header>
+    
+    <div class="landing-overlay"></div>
+    
+    <section class="search-section" id="search-section">
+      <div class="search-title">Browse Our Movies</div>
+      <div class="search-row">
+        <div class="search-bar">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search by Title, Genre, Actor"
+            />
+          </div>
+        </div>
+        <button class="not-loading" id="search-button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
 
-</body>
+
+      <div id="search-results" class="search-results"></div>
+    </section>
+
+    <div id="loading-spinner" class="spinner">
+      <div class="loader"></div>
+    </div>
+
+  <script>
+
+  function getQueryParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
+
+  const searchResults = document.getElementById("search-results");
+  const searchSection = document.getElementById("search-section");
+  const loadingSpinner = document.getElementById("loading-spinner");
+  const query = getQueryParameter("search");
+  const apiUrl = "http://www.omdbapi.com/?apikey=2c647a3d&s=";
+  if (query) {
+    document.getElementById("search-input").value = query; 
+    performSearch(query);
+  }
+  document.getElementById("search-button").addEventListener("click", () => {
+    const query = document.getElementById("search-input").value.trim();
+    if (query !== "") {
+      window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+    }
+  });
+  document.getElementById("search-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const query = document.getElementById("search-input").value.trim();
+      if (query !== "") {
+        window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+      }
+    }
+  });
+  async function performSearch(query) {
+    loadingSpinner.style.display = "flex";
+    searchSection.style.display = "none";  
+    try {
+      const response = await fetch(`${apiUrl}${encodeURIComponent(query)}`);
+      const data = await response.json();
+      if (data.Response === "True") {
+        searchResults.innerHTML = ""; 
+        data.Search.forEach((movie) => {
+          const movieDiv = document.createElement("div");
+          movieDiv.classList.add("movie-item");
+          movieDiv.innerHTML = `
+            <h3>${movie.Title}</h3>
+            <img src="${movie.Poster}" alt="${movie.Title}" />
+            <p>${movie.Year}</p>
+            <p>${movie.Type}</p>
+          `;
+          searchResults.appendChild(movieDiv);
+        });
+      } else {
+        searchResults.innerHTML = "<p>No movies found!</p>";
+      }
+    } catch (error) {
+      console.error("Error fetching movie data:", error);
+      searchResults.innerHTML = "<p>Error fetching data. Please try again later.</p>";
+    } finally {
+      setTimeout(() => {
+        loadingSpinner.style.display = "none"; 
+        searchSection.style.display = "block"; 
+      }, 1000); 
+    }
+  }
+</script>
+  </body>
 </html>
 
-</body>
+
+ 
+

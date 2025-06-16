@@ -1,47 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HomeCinema.com</title>
-  <link rel="stylesheet" href="./styles.css" />
-  <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
-</head>
-<body>
-  <header class="navbar">
-    <div class="nav content-wrapper justify-between align center">
-      <div class="logo">
-        <img src="./assets/HomeCinema.jpg" alt="logo" class="logo" />
-      </div>
-      <div class="links align-center justify-between">
-        <a href="#landing-page" class="link">Home</a>
-        <a href="index2.html" class="link">Find your movie</a>
-        <a href="#" class="link-primary">Create Account</a>
-      </div>
-    </div>
-  </header>
-
-  <section class="landing-page" id="landing-page">
-    <div class="landing-title">
-      Stream Any Movie For Free with no Hassle!
-      <div class="landing-para">
-        Find your movie in seconds by searching below
-      </div>
-
-      <div class="search-row">
-        <div class="search-bar">
-          <div class="input-wrapper">
-            <input type="text" placeholder="Search by Title, Genre, Actor" />
-          </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomeCinema.com</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="app.js" defer></script>
+    <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav content-wrapper justify-between align center">
+        <div class="logo">
+          <img src="./assets/HomeCinema.jpg" alt="logo" class="logo" />
         </div>
-        <button class="not-loading">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
+        <div class="links align-center justify-between">
+          <a href="#landing-page" class="link">Home</a>
+          <a href="index2.html" class="link">Find your movie</a>
+          <a href="#" class="link-primary">Create Account</a>
+        </div>
       </div>
-    </div>
+    </header>
 
     <img class="landing-img" src="./assets/movielandingnobackground" alt="Movie Landing Image" />
-  </section>
-</body>
+    <section class="landing-page" id="landing-page">
+      <div class="landing-title">
+        Stream Any Movie For Free with No Hassle!
+        <div class="landing-para">
+          Find your movie in seconds by searching below
+        </div>
+
+        <div class="search-row">
+          <div class="search-bar">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search by Title, Genre, Actor"
+              />
+            </div>
+          </div>
+          <button class="not-loading" id="search-button">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+    <div id="loading-spinner" class="loading-spinner">
+      <div class="spinner"></div>
+     <i class="fa-solid fa-spinner"></i>
+    </div>
+
+    <script>
+  
+      document.getElementById("search-button").addEventListener("click", () => {
+        const query = document.getElementById("search-input").value.trim();
+        if (query === "") {
+          alert("Please enter a search term.");
+          return;
+        }
+        document.getElementById("loading-spinner").style.display = "flex";
+        window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+      });
+      document.getElementById("search-input").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          const query = document.getElementById("search-input").value.trim();
+          if (query === "") {
+            alert("Please enter a search term.");
+            return;
+          }
+          document.getElementById("loading-spinner").style.display = "flex";
+          window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+        }
+      });
+    </script>
+  </body>
 </html>
 
