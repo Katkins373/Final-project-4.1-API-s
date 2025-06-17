@@ -6,7 +6,11 @@
     <title>HomeCinema.com</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="app.js" defer></script>
-    <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
+    <script src="index.js" defer></script>
+    <script
+      src="https://kit.fontawesome.com/cfa1b39128.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header class="navbar">
@@ -19,16 +23,83 @@
           <a href="index2.html" class="link">Find your movie</a>
           <a href="#" class="link-primary">Create Account</a>
         </div>
+
+     <button class="btn__menu" onclick="openMenu ()">
+        <i class="fas fa-bars"></i>
+        </button>
+        <div class="menu__backdrop">
+          <button class="btn__menu btn__menu--close" onclick="closeMenu ()">
+            <i class="fas fa-times"></i>
+          </button>
+
+        <ul>
+          <li class="menu__list">
+            <a href="index.html" class="menu__link" onclick="closeMenu ()"
+              >Home</a
+            >
+          </li>
+          <li class="menu__list">
+            <a href="index2.html" class="menu__link" onclick="closeMenu ()"
+              >Find Movies</a
+            >
+          </li>
+          <li class="menu__list">
+            <a href="#pricing" class="menu__link" onclick="closeMenu ()"
+              >Account</a
+            >
+          </li>
+        </ul>
       </div>
     </header>
 
-    <img class="landing-img" src="./assets/movielandingnobackground" alt="Movie Landing Image" />
+    <img
+      class="landing-img"
+      src="./assets/movielandingnobackground"
+      alt="Movie Landing Image"
+    />
     <section class="landing-page" id="landing-page">
       <div class="landing-title">
         Stream Any Movie For Free with No Hassle!
         <div class="landing-para">
           Find your movie in seconds by searching below
         </div>
+
+        
+  <!-- Filter Section Below the Search Bar -->
+  <section class="filter-section">
+
+    <div class="filter-container">
+      <!-- Genre Filter -->
+      <select id="genre-filter" class="filter">
+        <option value="">Select Genre</option>
+        <option value="action">Action</option>
+        <option value="comedy">Comedy</option>
+        <option value="drama">Drama</option>
+        <option value="horror">Horror</option>
+        <option value="thriller">Thriller</option>
+      </select>
+
+      <!-- Year Filter -->
+
+
+      <!-- Rating Filter -->
+      <select id="rating-filter" class="filter">
+        <option value="">Select Rating</option>
+        <option value="G">G</option>
+        <option value="PG">PG</option>
+        <option value="PG-13">PG-13</option>
+        <option value="R">R</option>
+      </select>
+
+      <!-- Apply Filter Button -->
+      <button id="apply-filters-btn" class="btn">Apply Filters</button>
+    </div>
+  </section>
+
+  <div id="loading-spinner" class="loading-spinner">
+    <div class="spinner"></div>
+    <i class="fa-solid fa-spinner"></i>
+  </div>
 
         <div class="search-row">
           <div class="search-bar">
@@ -44,15 +115,19 @@
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
         </div>
+        
       </div>
+      
     </section>
+
+
+    
     <div id="loading-spinner" class="loading-spinner">
       <div class="spinner"></div>
-     <i class="fa-solid fa-spinner"></i>
+      <i class="fa-solid fa-spinner"></i>
     </div>
 
     <script>
-  
       document.getElementById("search-button").addEventListener("click", () => {
         const query = document.getElementById("search-input").value.trim();
         if (query === "") {
@@ -60,20 +135,25 @@
           return;
         }
         document.getElementById("loading-spinner").style.display = "flex";
-        window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+        window.location.href = `index2.html?search=${encodeURIComponent(
+          query
+        )}`;
       });
-      document.getElementById("search-input").addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          const query = document.getElementById("search-input").value.trim();
-          if (query === "") {
-            alert("Please enter a search term.");
-            return;
+      document
+        .getElementById("search-input")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            const query = document.getElementById("search-input").value.trim();
+            if (query === "") {
+              alert("Please enter a search term.");
+              return;
+            }
+            document.getElementById("loading-spinner").style.display = "flex";
+            window.location.href = `index2.html?search=${encodeURIComponent(
+              query
+            )}`;
           }
-          document.getElementById("loading-spinner").style.display = "flex";
-          window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
-        }
-      });
+        });
     </script>
   </body>
 </html>
-

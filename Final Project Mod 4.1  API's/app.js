@@ -1,4 +1,4 @@
-console.log(data);
+
 const apiKey = "2c647a3d";
 const apiUrl = `http://www.omdbapi.com/?apikey=${apiKey}&s=`;
 function getQueryParameter(name) {
