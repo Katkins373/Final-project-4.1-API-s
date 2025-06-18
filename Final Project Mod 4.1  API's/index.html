@@ -65,11 +65,17 @@
         </div>
 
         
-  <!-- Filter Section Below the Search Bar -->
+  <!-- FILTER SECTION BELOW SEARCH BAR -->
   <section class="filter-section">
-
     <div class="filter-container">
-      <!-- Genre Filter -->
+
+
+
+<select id="year-filter" class="filter">
+  <option value="">Select Year</option>
+</select>
+
+      <!-- GENRE FILTER -->
       <select id="genre-filter" class="filter">
         <option value="">Select Genre</option>
         <option value="action">Action</option>
@@ -79,10 +85,8 @@
         <option value="thriller">Thriller</option>
       </select>
 
-      <!-- Year Filter -->
 
-
-      <!-- Rating Filter -->
+      <!-- RATING FILTER -->
       <select id="rating-filter" class="filter">
         <option value="">Select Rating</option>
         <option value="G">G</option>
@@ -91,9 +95,14 @@
         <option value="R">R</option>
       </select>
 
-      <!-- Apply Filter Button -->
+      <!-- FILTER BUTTON -->
       <button id="apply-filters-btn" class="btn">Apply Filters</button>
     </div>
+
+
+
+
+
   </section>
 
   <div id="loading-spinner" class="loading-spinner">

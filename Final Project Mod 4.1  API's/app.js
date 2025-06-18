@@ -48,3 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+const yearFilter = document.getElementById('year-filter');
+if (yearFilter) {
+  for (let year = 2025; year >= 1900; year--) {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearFilter.appendChild(option);
+  }
+}
