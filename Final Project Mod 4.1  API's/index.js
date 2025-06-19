@@ -5,6 +5,7 @@ document.body.classList.add ('menu--open')
 function closeMenu () {
 document.body.classList.remove ('menu--open')
 }
+
 window.addEventListener('scroll', function() {
   const btnMenu = document.querySelector('.btn__menu');
   if (btnMenu) {
