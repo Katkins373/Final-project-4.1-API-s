@@ -151,22 +151,36 @@ BTN MENU
   background: transparent;
   font-size: 37px;
   text-align: center;
-  display: none;
+  display: block;
   top: 54px;
   right: 20px;
   z-index: 2000;
-}
-
-.btn__menu {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  display: none;
 }
+
+
 .btn__menu.hide {
   opacity: 0;
   visibility: hidden;
 }
 
+.btn__menu--close {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  padding: 8px;
+  color: #b13f30;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: none;
+  border: none;
+  font-size: 37px;
+  z-index: 2001;
+}
 .menu__backdrop {
   position: fixed;
   background-color: rgb(249, 242, 242);
@@ -182,26 +196,15 @@ BTN MENU
   opacity: 0;
   visibility: hidden;
 }
-
-.menu--open .menu__backdrop {
+body.menu--open .menu__backdrop {
   visibility: visible;
   opacity: 1;
 }
-
-.btn__menu,
-.btn__menu--close {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-
 body.menu--open .btn__menu {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-
 body.menu--open .btn__menu.btn__menu--close {
   opacity: 1;
   visibility: visible;

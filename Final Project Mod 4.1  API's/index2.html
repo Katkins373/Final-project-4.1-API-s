@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find Your Movie</title>
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./styles2.css" />
-    <link rel="stylesheet" href="./styles3.css" />
     <script src="app.js" defer></script>
     <script src="index.js" defer></script>
     <script src="https://kit.fontawesome.com/cfa1b39128.js" crossorigin="anonymous"></script>
@@ -102,72 +100,148 @@
       <div class="loader"></div>
     </div>
 
-  <script>
+      <script>
+      // Get query parameter from URL
+function getQueryParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
 
-  function getQueryParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-  }
+// DOM elements
+const searchResults = document.getElementById("search-results");
+const searchSection = document.getElementById("search-section");
+const loadingSpinner = document.getElementById("loading-spinner");
+const yearFilter = document.getElementById("year-filter");
+const query = getQueryParameter("search");
+const yearParam = getQueryParameter("year");
+const apiUrl = "http://www.omdbapi.com/?apikey=2c647a3d&s=";
 
-  const searchResults = document.getElementById("search-results");
-  const searchSection = document.getElementById("search-section");
-  const loadingSpinner = document.getElementById("loading-spinner");
-  const query = getQueryParameter("search");
-  const apiUrl = "http://www.omdbapi.com/?apikey=2c647a3d&s=";
-  if (query) {
-    document.getElementById("search-input").value = query; 
-    performSearch(query);
+// Populate year filter dropdown from 2025 to 1900
+if (yearFilter) {
+  // Remove all options except the first (All Years)
+  while (yearFilter.options.length > 1) {
+    yearFilter.remove(1);
   }
-  document.getElementById("search-button").addEventListener("click", () => {
+  for (let year = 2025; year >= 1900; year--) {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearFilter.appendChild(option);
+  }
+  // Set the dropdown to the selected year if present in URL
+  if (yearParam) {
+    yearFilter.value = yearParam;
+  } else {
+    yearFilter.value = "";
+  }
+}
+
+// If there's a search query in the URL, perform search
+if (query) {
+  document.getElementById("search-input").value = query; 
+  performSearch(query, yearParam);
+}
+
+// Search button click event (INCLUDES YEAR)
+document.getElementById("search-button").addEventListener("click", () => {
+  const query = document.getElementById("search-input").value.trim();
+  const year = document.getElementById("year-filter").value;
+  if (query !== "") {
+    let url = `index2.html?search=${encodeURIComponent(query)}`;
+    if (year && year !== "") {
+      url += `&year=${encodeURIComponent(year)}`;
+    }
+    window.location.href = url;
+  }
+});
+
+// Search input "Enter" key event (INCLUDES YEAR)
+document.getElementById("search-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
     const query = document.getElementById("search-input").value.trim();
+    const year = document.getElementById("year-filter").value;
     if (query !== "") {
-      window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
-    }
-  });
-  document.getElementById("search-input").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      const query = document.getElementById("search-input").value.trim();
-      if (query !== "") {
-        window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+      let url = `index2.html?search=${encodeURIComponent(query)}`;
+      if (year && year !== "") {
+        url += `&year=${encodeURIComponent(year)}`;
       }
+      window.location.href = url;
     }
-  });
-  async function performSearch(query) {
-    loadingSpinner.style.display = "flex";
-    searchSection.style.display = "none";  
-    try {
-      const response = await fetch(`${apiUrl}${encodeURIComponent(query)}`);
-      const data = await response.json();
-      if (data.Response === "True") {
-        searchResults.innerHTML = ""; 
-        data.Search.forEach((movie) => {
-          const movieDiv = document.createElement("div");
-          movieDiv.classList.add("movie-item");
-          movieDiv.innerHTML = `
+  }
+});
+
+// Perform search and display results, with year support
+async function performSearch(query, year) {
+  loadingSpinner.style.display = "flex";
+  searchSection.style.display = "none";  
+  try {
+    let fetchUrl = `${apiUrl}${encodeURIComponent(query)}`;
+    // Only add year if it's not empty
+    if (year && year !== "") {
+      fetchUrl += `&y=${encodeURIComponent(year)}`;
+    }
+    const response = await fetch(fetchUrl);
+    const data = await response.json();
+    if (data.Response === "True") {
+      searchResults.innerHTML = ""; 
+      data.Search.forEach((movie) => {
+        const movieDiv = document.createElement("div");
+        movieDiv.classList.add("movie-item");
+        movieDiv.innerHTML = `
           <img src="${movie.Poster}" alt="${movie.Title}" />
           <h3>${movie.Title}</h3>
-            <p>${movie.Year}</p>
-           
-          `;
-          searchResults.appendChild(movieDiv);
-        });
-      } else {
-        searchResults.innerHTML = "<p>No movies found!</p>";
-      }
-    } catch (error) {
-      console.error("Error fetching movie data:", error);
-      searchResults.innerHTML = "<p>Error fetching data. Please try again later.</p>";
-    } finally {
-      setTimeout(() => {
-        loadingSpinner.style.display = "none"; 
-        searchSection.style.display = "block"; 
-      }, 1000); 
+          <p>${movie.Year}</p>
+        `;
+        searchResults.appendChild(movieDiv);
+      });
+    } else {
+      searchResults.innerHTML = "<p>No movies found!</p>";
+    }
+  } catch (error) {
+    console.error("Error fetching movie data:", error);
+    searchResults.innerHTML = "<p>Error fetching data. Please try again later.</p>";
+  } finally {
+    setTimeout(() => {
+      loadingSpinner.style.display = "none"; 
+      searchSection.style.display = "block"; 
+    }, 1000); 
+  }
+}
+
+// Filter button event listener (only year filter works with OMDb API)
+document.getElementById('apply-filters-btn').addEventListener('click', function() {
+  const query = document.getElementById('search-input').value.trim();
+  const year = document.getElementById('year-filter').value;
+  let url = `index2.html?search=${encodeURIComponent(query)}`;
+  // Only add year if it's not empty
+  if (year && year !== "") {
+    url += `&year=${encodeURIComponent(year)}`;
+  }
+  window.location.href = url;
+});
+
+          function openMenu() {
+    document.body.classList.add('menu--open');
+  }
+  function closeMenu() {
+    document.body.classList.remove('menu--open');
+  }
+
+// Show .btn__menu only at the top of the page with transition
+window.addEventListener('scroll', function() {
+  // Only select the open menu button (not the close button)
+  const btnMenu = document.querySelector('.btn__menu:not(.btn__menu--close)');
+  if (btnMenu) {
+    if (window.scrollY === 0) {
+      btnMenu.classList.remove('hide');
+    } else {
+      btnMenu.classList.add('hide');
     }
   }
-</script>
+});
+    </script>
   </body>
 </html>
-
 
  
 

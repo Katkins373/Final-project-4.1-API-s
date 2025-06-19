@@ -1,4 +1,3 @@
-
 // Get query parameter from URL
 function getQueryParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -13,9 +12,14 @@ const query = getQueryParameter("search");
 const yearParam = getQueryParameter("year");
 const apiUrl = "http://www.omdbapi.com/?apikey=2c647a3d&s=";
 
-// Populate year filter dropdown from 2025 to 1900
+// Populate year filter dropdown from 2025 to 1900, with "All Years" option
 const yearFilter = document.getElementById('year-filter');
 if (yearFilter) {
+  const defaultOption = document.createElement('option');
+  defaultOption.value = "";
+  defaultOption.textContent = "All Years";
+  yearFilter.appendChild(defaultOption);
+
   for (let year = 2025; year >= 1900; year--) {
     const option = document.createElement('option');
     option.value = year;
@@ -25,6 +29,8 @@ if (yearFilter) {
   // Set the dropdown to the selected year if present in URL
   if (yearParam) {
     yearFilter.value = yearParam;
+  } else {
+    yearFilter.value = "";
   }
 }
 
@@ -37,8 +43,13 @@ if (query) {
 // Search button click event
 document.getElementById("search-button").addEventListener("click", () => {
   const query = document.getElementById("search-input").value.trim();
+  const year = document.getElementById("year-filter").value;
   if (query !== "") {
-    window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+    let url = `index2.html?search=${encodeURIComponent(query)}`;
+    if (year && year !== "") {
+      url += `&year=${encodeURIComponent(year)}`;
+    }
+    window.location.href = url;
   }
 });
 
@@ -46,8 +57,13 @@ document.getElementById("search-button").addEventListener("click", () => {
 document.getElementById("search-input").addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     const query = document.getElementById("search-input").value.trim();
+    const year = document.getElementById("year-filter").value;
     if (query !== "") {
-      window.location.href = `index2.html?search=${encodeURIComponent(query)}`;
+      let url = `index2.html?search=${encodeURIComponent(query)}`;
+      if (year && year !== "") {
+        url += `&year=${encodeURIComponent(year)}`;
+      }
+      window.location.href = url;
     }
   }
 });
@@ -58,7 +74,8 @@ async function performSearch(query, year) {
   searchSection.style.display = "none";  
   try {
     let fetchUrl = `${apiUrl}${encodeURIComponent(query)}`;
-    if (year) {
+    // Only add year if it's not empty
+    if (year && year !== "") {
       fetchUrl += `&y=${encodeURIComponent(year)}`;
     }
     const response = await fetch(fetchUrl);
@@ -94,7 +111,8 @@ document.getElementById('apply-filters-btn').addEventListener('click', function(
   const query = document.getElementById('search-input').value.trim();
   const year = document.getElementById('year-filter').value;
   let url = `index2.html?search=${encodeURIComponent(query)}`;
-  if (year) {
+  // Only add year if it's not empty
+  if (year && year !== "") {
     url += `&year=${encodeURIComponent(year)}`;
   }
   window.location.href = url;
